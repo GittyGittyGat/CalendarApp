@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "iosfwd": "cpp",
+        "coroutine": "cpp",
+        "xlocale": "cpp",
+        "xstring": "cpp"
+    }
+}
