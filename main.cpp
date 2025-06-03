@@ -1,5 +1,6 @@
-#include <SDL3/SDL_video.h>
+#include <SDL3/SDL.h>
 #include <fstream>
+#include <string>
 
 
 
@@ -8,15 +9,6 @@ SDL_Renderer* graphicsRenderer = nullptr;
 SDL_Texture* bitmapTexture = nullptr;
 SDL_Surface* bitmapSurface = nullptr;
 
-sdlInit(char* name, int width, int  length, SDL_WINDOW_FLAGS flags){
-    SDL_Init(SDL_INIT_VIDEO);
-    applicationWindow =  SDL_CreateWindow(name, width, length, flags);
-    graphicsRenderer = SDL_CreateRenderer(applicationWindow, NULL);
-    bitmapSurface = SDL_LoadBMP("img/hello.bmp");
-    bitmapTexture = SDL_CreateTextureFromSurface(graphicsRenderer, bitmapSurface);
-    SDL_DestroySurface(bitmapSurface);
-
-}
 
 void sdlClose(SDL_Window* &window){
     SDL_DestroyWindow(window);
@@ -31,15 +23,18 @@ void processArguments(int argc, char* argv[]){
 int main(int argc, char* argv[]){
     
     // logger logs errors.
-    ofstream logger("calendar_logs.txt");
+    std::ofstream logger("calendar_logs.txt");
+	
+    SDL_Init(SDL_INIT_VIDEO);
+    applicationWindow =  SDL_CreateWindow("Calendar", 1280, 720, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
+    graphicsRenderer = SDL_CreateRenderer(applicationWindow, NULL);
+    bitmapSurface = SDL_LoadBMP("img/testing.bmp");
+    bitmapTexture = SDL_CreateTextureFromSurface(graphicsRenderer, bitmapSurface);
+    SDL_DestroySurface(bitmapSurface);
 
     bool closeApplication = false;
-
-
-    //possible names: techno calendar?
-    SDL_Window* applicationWindow = sdlInit("Calendar", 1280, 720, SDL_WINDOW_VULKAN | SDL_WINDOW_RESIZABLE);
     
-    if(window == nullptr){
+    if(applicationWindow == nullptr){
         logger << "window creating failed (window == nullptr)\n";
         logger.close();
         return EXIT_FAILURE;
@@ -47,9 +42,12 @@ int main(int argc, char* argv[]){
 
     while(!closeApplication){
         SDL_Event event;
+        SDL_RenderClear(graphicsRenderer);
+        SDL_RenderTexture(graphicsRenderer, bitmapTexture, NULL, NULL);
+        
         while(SDL_PollEvent(&event)){
             switch(event.type){
-                case event.type == SDL_EVENT_QUIT;
+                case SDL_EVENT_QUIT:
                     closeApplication = true;
                     //prepare for quititng the application.
                 break;
@@ -57,6 +55,7 @@ int main(int argc, char* argv[]){
                 break;
             }
         }
+        SDL_RenderPresent(graphicsRenderer);
     }
     
 
