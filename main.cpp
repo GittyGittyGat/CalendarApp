@@ -10,11 +10,6 @@ SDL_Texture* bitmapTexture = nullptr;
 SDL_Surface* bitmapSurface = nullptr;
 
 
-void sdlClose(SDL_Window* &window){
-    SDL_DestroyWindow(window);
-    SDL_Quit();
-}
-
 void processArguments(int argc, char* argv[]){
     // check for arguments and process them (not implemented yet)
     return;
@@ -58,6 +53,11 @@ int main(int argc, char* argv[]){
         SDL_RenderPresent(graphicsRenderer);
     }
     
+    // delete SDL obejects
+    SDL_DestroyTexture(bitmapTexture);
+    SDL_DestroyRenderer(graphicsRenderer);
+    SDL_DestroyWindow(applicationWindow);
+    SDL_Quit();
 
     logger.close();
 } // return 0 implied
