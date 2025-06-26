@@ -3,7 +3,7 @@
 Making a useful task management application.
 
 Please note this application requires the use of SDL and SQLite (both of which are not included in this repository).
-Once the application reaches a "useful" state I plan on adding a CMake file to fetch SDL/SQLite and have it compile across windows and linux. With plans to add android and iOS down the line (hence the vertical design).
+Once the application reaches a "useful" state I plan on adding a CMake file to fetch SDL/SQLite and have it compile across windows and linux. Planning to add android and iOS down the line (hence the vertical design).
 
 Photos of current state:
 
