@@ -1,9 +1,10 @@
 #pragma once
-#include "database/database.h"
+#include "../database/database.h"
 #include "taskunit.h"
 
 const int STARTING_WIN_HEIGHT = 720;
 const int STARTING_WIN_WIDTH = 480;
+
 
 class taskdisplay
 {
@@ -25,12 +26,16 @@ private:
 	std::vector<taskunit> tasks;
 	database db;
 	int windowWidth = STARTING_WIN_WIDTH, windowHeight = STARTING_WIN_HEIGHT;
-
+	bool dataNeedsUpdate = true;
 public:
-	void draw(SDL_Renderer*& renderer, TTF_Font*& font1, TTF_Font*& font2);
+	void draw(SDL_Renderer*& renderer, TTF_Font*& font1, TTF_Font*& font2, std::vector<SDL_Texture*>& zeroToNine);
 	void fetchDataBase();
-	taskdisplay(std::string path) : db(path) {}
-	void checkClick(SDL_FRect* mouse);
+	void checkSwipe(SDL_FRect* mouse, SDL_FRect* initPosition);
+	taskdisplay(std::string databasePath);
+	unsigned int checkClick(SDL_FRect* mouse);
+	eventTable* getEventTable(unsigned int idx) {
+		return tasks[idx].getEventTable();
+	}
 	void updateWindowSize(const int& width, const int& height) {
 
 	}

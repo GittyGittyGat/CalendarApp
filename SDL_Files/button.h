@@ -2,6 +2,7 @@
 #include <SDL3/SDL.h>
 #include <string>
 #include <functional>
+#include <vector>
 
 // temporary definition as the project comes together
 const float BUTTON_HEIGHT  = 100.0f;
@@ -23,15 +24,21 @@ public:
 		srect.y += y;
 	}
 	void update(const float& width);
-	void update(const float& x, const float& y) {
+	inline void update(const float& x, const float& y, const float& w, const float& h) {
+		srect.x = x; srect.y = y; srect.w = w; srect.h = h;
+	}
+	inline void update(const float& x, const float& y) {
 		srect.x = x; srect.y = y;
+	}
+	inline void incrementX(const float& x) {
+		srect.x += x;
 	}
 	inline bool hasIntersection(const SDL_FRect* mouse) const {
 		return SDL_HasRectIntersectionFloat(&srect, mouse);
 	}
-	void draw(SDL_Renderer* &renderer) const;
+	void getDrawData(std::vector<SDL_FRect>& rectData) const;
 	//void onHover();
-	void (*onClick)(std::string);
-	button(void (*func)(std::string));
+	void (*onClick)(void) = nullptr;
+	button() {}
 	~button() {}
 };	

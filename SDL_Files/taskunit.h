@@ -1,6 +1,6 @@
 #pragma once
 //#include <SDL3/SDL.h>
-#include "database/eventStructs.h"
+#include "../database/eventStructs.h"
 #include "button.h"
 #include "circledraw.h"
 #include <iostream>
@@ -24,44 +24,28 @@ private:
 	SDL_FRect ddescBox;
 	SDL_FRect snameBox = { 0, 0, 0, 0 };
 	SDL_FRect sdescBox = { 0, 0, 0, 0 };
+	SDL_FRect urgBox = { 0, 0, 0, 0 };
+	SDL_FRect prioBox = { 0, 0, 0, 0 };
 	//std::string name = "hello Wolrd"; // temp -> will use event for it later
 	//std::string desc = "this is my random desc"; // temp -> will use event for it later
 	button myButton;
 	SDL_Texture* nameTexture = nullptr;
 	SDL_Texture* descTexture = nullptr;
+	SDL_Texture* priorityTexture = nullptr;
+	SDL_Texture* urgencyTexture = nullptr;
 	eventTable event;
 	circledraw urgCircle;
 	circledraw prioCircle;
 public:
+	bool render = false;
 	//placement starts with 0 for the first item
-	taskunit(void(*func)(std::string), /*const eventTable& eT,*/ const int& placement, const float& width, eventTable& eT) :myButton(func)
-	{
-		float y = 0;
-		event = eT;
-		if (placement) {
-			y = (placement * (BUTTON_SPACING + BUTTON_HEIGHT)) + BUTTON_SPACING + BUTTON_SPACE_BUFFE;
-			myButton.update(BUTTON_SPACING, y);
-			std::cout << placement * (2 * BUTTON_SPACING + BUTTON_HEIGHT) << '\n';
-		}
-		else {
-			y = (BUTTON_SPACING + BUTTON_SPACE_BUFFE);
-			myButton.update(BUTTON_SPACING, y);
-			std::cout << BUTTON_SPACING << '\n';
-		}
-		myButton.update(width);
-		event.name += std::to_string(placement);
-
-		urgCircle.update(width - 20 - BUTTON_SPACING, y + 15, 10, { 0, 255, 255, 255 });
-		prioCircle.update(width - 45 - BUTTON_SPACING, y + 15, 10, { 255, 0, 255, 255 });
-
-		dnameBox = { (float)myButton.getX(), (float)myButton.getY(), (float)width, FONTSIZE};
-		ddescBox = { (float)myButton.getX(), (float)myButton.getY() + 38, (float)width, FONTSIZE };
-
-
-	}
+	taskunit(const int& placement, const float& width, eventTable& eT);
 	
-	void draw(SDL_Renderer*& renderer, TTF_Font*& font, TTF_Font*& font2);
-
+	void getDrawData(std::vector <std::vector<SDL_FPoint>>& circleData, std::vector<SDL_FRect>& rectData);
+	void drawText(SDL_Renderer* renderer, TTF_Font* font, TTF_Font* font2, std::vector<SDL_Texture*>& zeroToNine);
+	eventTable* getEventTable() {
+		return &event;
+	}
 	void update(const float& width) {
 		myButton.update(width);
 		dnameBox.w = width;
@@ -72,16 +56,24 @@ public:
 	void inline incrementY(const float& y) {
 		dnameBox.y += y;
 		ddescBox.y += y;
+		urgBox.y += y;
+		prioBox.y += y;
 		myButton.incrementY(y);
 		prioCircle.incrementY(y);
 		urgCircle.incrementY(y);
 	}
+	void inline incrementX(const float& x) {
+		dnameBox.x += x;
+		ddescBox.x += x;
+		urgBox.x += x;
+		prioBox.x += x;
+		myButton.incrementX(x);
+		prioCircle.incrementX(x);
+		urgCircle.incrementX(x);
+	}
+	void swipe(SDL_FRect* mouseNew, SDL_FRect* mouseOld);
 	inline bool hasIntersection(const SDL_FRect* mouse) {
 		return myButton.hasIntersection(mouse);
 	}
-	inline void clicked() const {
-		myButton.onClick(event.notes);
-	}
 	~taskunit() {}
 };
-
