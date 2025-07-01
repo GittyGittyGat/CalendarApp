@@ -1,5 +1,7 @@
 # CalendarApp
 
+Note: currently focused on imporving my front-end capabilities with JS30 in 30 and DSA with LeetCode. 
+
 Making a useful task management application.
 
 Please note this application requires the use of SDL and SQLite (both of which are not included in this repository).
